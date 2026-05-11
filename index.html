@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NexSense Labs — FreshSense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap"
+    rel="stylesheet">
+  <style>
+    :root[data-theme="dark"] {
+      --bg: #0a0f0d;
+      --bg2: #0f1612;
+      --bg3: #141f18;
+      --surface: #1a2820;
+      --surface2: #1f3028;
+      --border: rgba(74, 189, 120, 0.15);
+      --text: #e8f5ee;
+      --text2: #8fb8a0;
+      --text3: #5a8a6e;
+      --accent: #3dbd7a;
+      --accent2: #2a9a5e;
+      --accent3: #1a7a46;
+      --glow: rgba(61, 189, 122, 0.2);
+      --glow2: rgba(61, 189, 122, 0.08);
+      --card-bg: rgba(26, 40, 32, 0.7);
+      --nav-bg: rgba(10, 15, 13, 0.85);
+      --hero-fade: linear-gradient(to bottom, #0a0f0d 0%, transparent 30%, transparent 70%, #0a0f0d 100%);
+    }
+
+    :root[data-theme="light"] {
+      --bg: #f4faf6;
+      --bg2: #ecf7f0;
+      --bg3: #e2f2e8;
+      --surface: #ffffff;
+      --surface2: #f0faf4;
+      --border: rgba(30, 130, 80, 0.18);
+      --text: #0f2a1a;
+      --text2: #3a6b50;
+      --text3: #6a9b80;
+      --accent: #1e8a50;
+      --accent2: #177040;
+      --accent3: #0f5530;
+      --glow: rgba(30, 138, 80, 0.15);
+      --glow2: rgba(30, 138, 80, 0.06);
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --nav-bg: rgba(244, 250, 246, 0.9);
+      --hero-fade: linear-gradient(to bottom, #f4faf6 0%, transparent 30%, transparent 70%, #f4faf6 100%);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      transition: background 0.4s, color 0.4s;
+    }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: var(--nav-bg);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      z-index: 100;
+      padding: 0 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-logo .dot {
+      width: 10px;
+      height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.3);
+        opacity: 0.7;
+      }
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: var(--text2);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .theme-toggle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 6px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text2);
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .theme-toggle .icon {
+      font-size: 1rem;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 100px 5% 80px;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 30%, transparent 80%);
+      pointer-events: none;
+    }
+
+    .hero-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .orb1 {
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(61, 189, 122, 0.18) 0%, transparent 70%);
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: orbFloat 8s ease-in-out infinite;
+    }
+
+    .orb2 {
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(61, 189, 122, 0.1) 0%, transparent 70%);
+      bottom: 10%;
+      right: 10%;
+      animation: orbFloat 10s ease-in-out infinite reverse;
+    }
+
+    @keyframes orbFloat {
+
+      0%,
+      100% {
+        transform: translateX(-50%) translateY(0);
+      }
+
+      50% {
+        transform: translateX(-50%) translateY(-30px);
+      }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 18px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero-tag span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(3rem, 7vw, 6rem);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+      margin-bottom: 28px;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--accent);
+    }
+
+    h1 .line2 {
+      display: block;
+      color: var(--text2);
+      font-weight: 600;
+      font-size: 0.75em;
+      margin-top: 6px;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--text2);
+      max-width: 560px;
+      margin: 0 auto 44px;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 15px 36px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 30px var(--glow);
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.15), transparent);
+      pointer-events: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px var(--glow);
+      background: var(--accent2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text2);
+      border-radius: 8px;
+      padding: 15px 36px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 400;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--text3);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: fadeUp 1s 0.8s ease both;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollDrop 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollDrop {
+      0% {
+        transform: scaleY(0);
+        transform-origin: top;
+      }
+
+      50% {
+        transform: scaleY(1);
+        transform-origin: top;
+      }
+
+      51% {
+        transform: scaleY(1);
+        transform-origin: bottom;
+      }
+
+      100% {
+        transform: scaleY(0);
+        transform-origin: bottom;
+      }
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(24px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ─── SECTION COMMONS ─── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 120px 5%;
+    }
+
+    .section-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+      padding-left: 24px;
+      position: relative;
+    }
+
+    .section-tag::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 16px;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--text2);
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 520px;
+      margin-bottom: 60px;
+    }
+
+    /* ─── STATS BAR ─── */
+    .stats-bar {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 5%;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 20px;
+      border-right: 1px solid var(--border);
+    }
+
+    .stat:last-child {
+      border-right: none;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      line-height: 1;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--text3);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ─── PROBLEM SECTION ─── */
+    .problem-section {
+      background: var(--bg2);
+    }
+
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .problem-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .problem-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      transition: border-color 0.3s, transform 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .problem-card:hover {
+      border-color: var(--accent);
+      transform: translateX(6px);
+    }
+
+    .prob-icon {
+      width: 44px;
+      height: 44px;
+      min-width: 44px;
+      background: var(--glow2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .prob-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .prob-desc {
+      font-size: 0.85rem;
+      color: var(--text2);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* ─── SOLUTION SECTION ─── */
+    .solution-section {
+      background: var(--bg);
+    }
+
+    .solution-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 60px;
+    }
+
+    .sol-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px 30px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.35s;
+      backdrop-filter: blur(10px);
+      cursor: default;
+    }
+
+    .sol-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--accent), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .sol-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px var(--glow2);
+    }
+
+    .sol-card:hover::before {
+      opacity: 1;
+    }
+
+    .sol-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 4rem;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      color: var(--glow);
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      line-height: 1;
+      color: rgba(61, 189, 122, 0.1);
+      pointer-events: none;
+    }
+
+    .sol-icon {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .sol-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 12px;
+    }
+
+    .sol-desc {
+      font-size: 0.88rem;
+      color: var(--text2);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    .how-section {
+      background: var(--bg2);
+    }
+
+    .how-flow {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-top: 60px;
+      position: relative;
+    }
+
+    .how-step {
+      flex: 1;
+      text-align: center;
+      padding: 0 20px;
+      position: relative;
+    }
+
+    .how-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: calc(50% + 36px);
+      right: calc(-50% + 36px);
+      height: 1px;
+      background: linear-gradient(to right, var(--accent), var(--border));
+    }
+
+    .how-circle {
+      width: 60px;
+      height: 60px;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      color: var(--accent);
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 0 20px var(--glow);
+      transition: all 0.3s;
+    }
+
+    .how-step:hover .how-circle {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .how-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .how-desc {
+      font-size: 0.83rem;
+      color: var(--text2);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* ─── USERS SECTION ─── */
+    .users-section {
+      background: var(--bg);
+    }
+
+    .users-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 60px;
+    }
+
+    .user-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 30px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .user-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 10px 40px var(--glow2);
+    }
+
+    .user-avatar {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      background: var(--glow2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .user-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 6px;
+    }
+
+    .user-desc {
+      font-size: 0.84rem;
+      color: var(--text2);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* ─── RISKS ─── */
+    .risks-section {
+      background: var(--bg2);
+    }
+
+    .risks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 60px;
+    }
+
+    .risk-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 24px;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+    }
+
+    .risk-card:hover {
+      border-color: rgba(220, 80, 80, 0.4);
+    }
+
+    .risk-badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 16px;
+    }
+
+    .risk-badge.technical {
+      background: rgba(80, 160, 220, 0.1);
+      color: #50a0dc;
+      border: 1px solid rgba(80, 160, 220, 0.2);
+    }
+
+    .risk-badge.user {
+      background: rgba(220, 160, 60, 0.1);
+      color: #dca03c;
+      border: 1px solid rgba(220, 160, 60, 0.2);
+    }
+
+    .risk-badge.cost {
+      background: rgba(220, 80, 80, 0.1);
+      color: #dc5050;
+      border: 1px solid rgba(220, 80, 80, 0.2);
+    }
+
+    .risk-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+    }
+
+    .risk-desc {
+      font-size: 0.84rem;
+      color: var(--text2);
+      line-height: 1.65;
+      font-weight: 300;
+    }
+
+    /* ─── SCALE ─── */
+    .scale-section {
+      background: var(--bg);
+    }
+
+    .scale-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .scale-list {
+      list-style: none;
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .scale-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: var(--text2);
+      font-weight: 300;
+    }
+
+    .scale-list li::before {
+      content: '→';
+      color: var(--accent);
+      font-weight: 700;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .scale-visual {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .scale-item {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 18px;
+      transition: all 0.3s;
+      cursor: default;
+    }
+
+    .scale-item:hover {
+      border-color: var(--accent);
+      background: var(--surface2);
+    }
+
+    .scale-item-icon {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .scale-item-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .scale-item-sub {
+      font-size: 0.78rem;
+      color: var(--text3);
+      margin-top: 4px;
+    }
+
+    /* ─── TEAM CTA ─── */
+    .team-section {
+      background: var(--bg2);
+      text-align: center;
+      padding: 100px 5%;
+    }
+
+    .team-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+      margin: 60px auto 0;
+      max-width: 760px;
+    }
+
+    .member-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 10px 22px;
+      font-size: 0.88rem;
+      color: var(--text2);
+      font-weight: 400;
+      transition: all 0.3s;
+      backdrop-filter: blur(10px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .member-chip:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .member-chip .chip-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg);
+      border-top: 1px solid var(--border);
+      padding: 48px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .footer-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--text3);
+    }
+
+    .footer-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 8px 18px;
+      font-size: 0.78rem;
+      color: var(--text2);
+    }
+
+    .footer-badge span {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ─── SCROLL REVEAL ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+
+      .solution-grid,
+      .risks-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .problem-grid,
+      .scale-inner {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .how-flow {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .how-step::after {
+        display: none;
+      }
+
+      .stats-bar {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stat {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .users-grid {
+        grid-template-columns: 1fr;
+      }
+
+      nav .nav-links {
+        display: none;
+      }
+    }
+
+    @media (max-width: 600px) {
+
+      .solution-grid,
+      .risks-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .scale-visual {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-bar {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ─── NAV ─── -->
+  <nav>
+    <a class="nav-logo" href="#">
+      <span class="dot"></span>
+      NEXSENSE LABS
+    </a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problem</a></li>
+      <li><a href="#solution">Solution</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#scale">Scale</a></li>
+      <li><a href="#team">Team</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">
+      <span class="icon" id="themeIcon">☀️</span>
+      <span id="themeLabel">Light</span>
+    </button>
+  </nav>
+
+  <!-- ─── HERO ─── -->
+  <section class="hero">
+    <div class="hero-grid"></div>
+    <div class="hero-orb orb1"></div>
+    <div class="hero-orb orb2"></div>
+    <div class="hero-content">
+      <div class="hero-tag"><span></span> RTU · Technopreneurship 2025–26</div>
+      <h1>
+        FRESH<em>SENSE</em>
+        <span class="line2">Intelligent Food Safety. Redefined.</span>
+      </h1>
+      <p class="hero-sub">
+        An IoT-powered smart container that detects food spoilage before it's visible —
+        turning daily guesswork into real-time, data-driven food safety.
+      </p>
+      <div class="hero-cta">
+        <a href="#solution" class="btn-primary">Explore the Tech</a>
+        <a href="#team" class="btn-secondary">Meet the Team →</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      Scroll
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ─── STATS ─── -->
+  <div class="stats-bar">
+    <div class="stat reveal">
+      <span class="stat-num" data-target="30">0</span>
+      <span class="stat-label">% of food wasted yearly</span>
+    </div>
+    <div class="stat reveal reveal-delay-1">
+      <span class="stat-num" data-target="3">0</span>
+      <span class="stat-label">sensor types integrated</span>
+    </div>
+    <div class="stat reveal reveal-delay-2">
+      <span class="stat-num" data-target="4">0</span>
+      <span class="stat-label">target user groups</span>
+    </div>
+    <div class="stat reveal reveal-delay-3">
+      <span class="stat-num" data-target="6">0</span>
+      <span class="stat-label">engineers behind it</span>
+    </div>
+  </div>
+
+  <!-- ─── PROBLEM ─── -->
+  <section id="problem" class="problem-section">
+    <div class="problem-grid">
+      <div>
+        <div class="section-tag reveal">The Problem</div>
+        <h2 class="reveal">Food safety is still&nbsp;a guessing&nbsp;game.</h2>
+        <p class="section-sub reveal">
+          Every day, households make costly food decisions based on misleading labels,
+          unreliable senses, and sheer forgetfulness. FreshSense eliminates that uncertainty.
+        </p>
+      </div>
+      <div class="problem-cards">
+        <div class="problem-card reveal">
+          <div class="prob-icon">🏷️</div>
+          <div>
+            <div class="prob-title">Date Code Confusion</div>
+            <div class="prob-desc">Misleading labels cause consumers to discard perfectly good food — or worse, keep
+              dangerous food — based on generic dates.</div>
+          </div>
+        </div>
+        <div class="problem-card reveal reveal-delay-1">
+          <div class="prob-icon">👃</div>
+          <div>
+            <div class="prob-title">The Sniff Test Fallacy</div>
+            <div class="prob-desc">Odorless pathogens like Salmonella and Listeria are completely undetectable by smell,
+              making the sniff test dangerously unreliable.</div>
+          </div>
+        </div>
+        <div class="problem-card reveal reveal-delay-2">
+          <div class="prob-icon">🧠</div>
+          <div>
+            <div class="prob-title">Leftover Amnesia</div>
+            <div class="prob-desc">Forgotten containers in the back of the fridge become silent hazards — nobody knows
+              what's in them or how long it's been there.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SOLUTION ─── -->
+  <section id="solution" class="solution-section">
+    <div class="section-tag reveal">Technology Solution</div>
+    <h2 class="reveal">Three sensors. One verdict.</h2>
+    <p class="section-sub reveal">
+      FreshSense embeds hardware intelligence directly into the lid, running a lightweight AI model locally —
+      no cloud dependency, no guesswork.
+    </p>
+    <div class="solution-grid">
+      <div class="sol-card reveal">
+        <span class="sol-num">01</span>
+        <span class="sol-icon">👁️</span>
+        <div class="sol-title">Optical Sensor</div>
+        <p class="sol-desc">Monitors visual decay markers — color shift, mold formation, and surface texture changes —
+          in real time without opening the container.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-1">
+        <span class="sol-num">02</span>
+        <span class="sol-icon">🧪</span>
+        <div class="sol-title">Gas Sensor</div>
+        <p class="sol-desc">Detects spoilage compounds released during bacterial breakdown — the invisible chemistry of
+          food decay that the nose can't always catch.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-2">
+        <span class="sol-num">03</span>
+        <span class="sol-icon">🌡️</span>
+        <div class="sol-title">Environmental Sensors</div>
+        <p class="sol-desc">Tracks internal temperature and humidity continuously, because storage conditions directly
+          affect spoilage rate and bacterial growth curves.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-3">
+        <span class="sol-num">04</span>
+        <span class="sol-icon">🤖</span>
+        <div class="sol-title">Edge AI Microcontroller</div>
+        <p class="sol-desc">A tiny embedded computer in the lid fuses all sensor inputs and runs a local AI model to
+          classify food status: Fresh, Watch This, or Unsafe.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-1">
+        <span class="sol-num">05</span>
+        <span class="sol-icon">📱</span>
+        <div class="sol-title">Mobile App</div>
+        <p class="sol-desc">Receives wireless alerts, suggests recipes based on expiring items, and models bacterial
+          growth risk — a passive tracker becomes an active food safety advisor.</p>
+      </div>
+      <div class="sol-card reveal reveal-delay-2">
+        <span class="sol-num">06</span>
+        <span class="sol-icon">🔒</span>
+        <div class="sol-title">Local Processing</div>
+        <p class="sol-desc">All analysis happens on-device. No cloud subscription, no data privacy concerns, no internet
+          dependency. Intelligence lives inside the lid.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── HOW IT WORKS ─── -->
+  <section id="how" class="how-section">
+    <div class="section-tag reveal">Process</div>
+    <h2 class="reveal">How FreshSense works</h2>
+    <p class="section-sub reveal">From sealed container to your phone — in seconds.</p>
+    <div class="how-flow">
+      <div class="how-step reveal">
+        <div class="how-circle">1</div>
+        <div class="how-title">Seal & Store</div>
+        <div class="how-desc">Place food in the FreshSense container. Sensors activate automatically when the lid is
+          closed.</div>
+      </div>
+      <div class="how-step reveal reveal-delay-1">
+        <div class="how-circle">2</div>
+        <div class="how-title">Continuous Sensing</div>
+        <div class="how-desc">Optical, gas, and environmental sensors monitor conditions 24/7, logging data to the
+          embedded microcontroller.</div>
+      </div>
+      <div class="how-step reveal reveal-delay-2">
+        <div class="how-circle">3</div>
+        <div class="how-title">AI Analysis</div>
+        <div class="how-desc">The local AI model interprets fused sensor data and assigns a freshness classification
+          every few minutes.</div>
+      </div>
+      <div class="how-step reveal reveal-delay-3">
+        <div class="how-circle">4</div>
+        <div class="how-title">Smart Alert</div>
+        <div class="how-desc">The app notifies you with clear guidance — eat now, use soon, or discard — along with
+          recipe suggestions and risk projections.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── USERS ─── -->
+  <section id="users" class="users-section">
+    <div class="section-tag reveal">Target Users</div>
+    <h2 class="reveal">Built for real households,<br>not perfect ones.</h2>
+    <p class="section-sub reveal">FreshSense addresses the specific pain points of four overlooked groups.</p>
+    <div class="users-grid">
+      <div class="user-card reveal">
+        <div class="user-avatar">👨‍👩‍👧</div>
+        <div>
+          <div class="user-name">Health-Conscious & Busy Parents</div>
+          <div class="user-desc">Juggling work and family, they need fast, reliable food safety decisions without
+            spending time inspecting every container.</div>
+        </div>
+      </div>
+      <div class="user-card reveal reveal-delay-1">
+        <div class="user-avatar">👴</div>
+        <div>
+          <div class="user-name">Elderly People</div>
+          <div class="user-desc">Age-related decline in smell and taste makes traditional spoilage detection unreliable
+            and potentially dangerous.</div>
+        </div>
+      </div>
+      <div class="user-card reveal reveal-delay-2">
+        <div class="user-avatar">🎓</div>
+        <div>
+          <div class="user-name">College Students in Shared Housing</div>
+          <div class="user-desc">Communal fridges are chaos. FreshSense gives each person clear ownership and status of
+            their stored food.</div>
+        </div>
+      </div>
+      <div class="user-card reveal reveal-delay-3">
+        <div class="user-avatar">🩺</div>
+        <div>
+          <div class="user-name">People with Compromised Smell</div>
+          <div class="user-desc">Post-COVID anosmia and other conditions make smell-based food checking impossible —
+            sensor data fills that gap precisely.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── RISKS ─── -->
+  <section id="risks" class="risks-section">
+    <div class="section-tag reveal">Risk Assessment</div>
+    <h2 class="reveal">Honest about the challenges.</h2>
+    <p class="section-sub reveal">Good engineering means acknowledging what could go wrong — and designing around it.
+    </p>
+    <div class="risks-grid">
+      <div class="risk-card reveal">
+        <span class="risk-badge technical">🔧 Technical</span>
+        <div class="risk-title">Sensor Interference</div>
+        <div class="risk-desc">Kitchen environments — steam, cleaning agents, temperature swings — can trigger false
+          positives or mask real spoilage signals.</div>
+      </div>
+      <div class="risk-card reveal reveal-delay-1">
+        <span class="risk-badge user">👤 User Behavior</span>
+        <div class="risk-title">Alert Fatigue & Habit Resistance</div>
+        <div class="risk-desc">Users may ignore repeated notifications or resist changing ingrained food storage habits,
+          reducing the product's real-world safety impact.</div>
+      </div>
+      <div class="risk-card reveal reveal-delay-2">
+        <span class="risk-badge cost">💰 Economics</span>
+        <div class="risk-title">High Production Cost</div>
+        <div class="risk-desc">Multi-sensor arrays, edge AI chips, and wireless connectivity push unit costs above
+          typical household kitchenware price thresholds.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── SCALE ─── -->
+  <section id="scale" class="scale-section">
+    <div class="scale-inner">
+      <div>
+        <div class="section-tag reveal">Scalability</div>
+        <h2 class="reveal">Beyond the kitchen. Beyond the home.</h2>
+        <p class="section-sub reveal">
+          The same sensing architecture that protects a single household can be deployed at every scale of the food
+          supply chain.
+        </p>
+        <ul class="scale-list">
+          <li class="reveal">Shared amenity in apartment buildings for communal refrigerators</li>
+          <li class="reveal reveal-delay-1">School and office cafeterias monitoring bulk food in real time</li>
+          <li class="reveal reveal-delay-2">Restaurants and grocery stores for live inventory safety checks</li>
+          <li class="reveal reveal-delay-3">Food banks and delivery services ensuring donated items stay safe</li>
+          <li class="reveal reveal-delay-4">Embedded directly into smart refrigerators and commercial coolers</li>
+        </ul>
+      </div>
+      <div class="scale-visual reveal">
+        <div class="scale-item">
+          <span class="scale-item-icon">🏠</span>
+          <div class="scale-item-title">Households</div>
+          <div class="scale-item-sub">Core market</div>
+        </div>
+        <div class="scale-item">
+          <span class="scale-item-icon">🏢</span>
+          <div class="scale-item-title">Offices</div>
+          <div class="scale-item-sub">Communal fridges</div>
+        </div>
+        <div class="scale-item">
+          <span class="scale-item-icon">🍽️</span>
+          <div class="scale-item-title">Restaurants</div>
+          <div class="scale-item-sub">Safety compliance</div>
+        </div>
+        <div class="scale-item">
+          <span class="scale-item-icon">🏥</span>
+          <div class="scale-item-title">Healthcare</div>
+          <div class="scale-item-sub">High-risk users</div>
+        </div>
+        <div class="scale-item">
+          <span class="scale-item-icon">🎓</span>
+          <div class="scale-item-title">Schools</div>
+          <div class="scale-item-sub">Cafeteria monitoring</div>
+        </div>
+        <div class="scale-item">
+          <span class="scale-item-icon">🚚</span>
+          <div class="scale-item-title">Logistics</div>
+          <div class="scale-item-sub">Cold chain tracking</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TEAM ─── -->
+  <section id="team" class="team-section">
+    <div class="section-tag reveal" style="display:inline-block">The Team</div>
+    <h2 class="reveal">Watt's<em style="font-style:normal;color:var(--accent)">Up</em> — Group Activity No. 1</h2>
+    <p class="section-sub reveal" style="margin:0 auto 0;text-align:center">
+      RTU College of Engineering · Department of Computer Engineering<br>
+      Technopreneurship · 2nd Semester, SY 2025–2026
+    </p>
+    <div class="team-grid">
+      <div class="member-chip reveal"><span class="chip-dot"></span> De la Rama, Deniel</div>
+      <div class="member-chip reveal reveal-delay-1"><span class="chip-dot"></span> Ferrer, James</div>
+      <div class="member-chip reveal reveal-delay-2"><span class="chip-dot"></span> Hinampas, Romar</div>
+      <div class="member-chip reveal reveal-delay-3"><span class="chip-dot"></span> Jarina, John Mark</div>
+      <div class="member-chip reveal reveal-delay-1"><span class="chip-dot"></span> Lawig, Jhon Paul</div>
+      <div class="member-chip reveal reveal-delay-2"><span class="chip-dot"></span> Peñaflorida, Jhon Eric</div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ─── -->
+  <footer>
+    <div class="footer-logo">NEXSENSE LABS</div>
+    <div class="footer-copy">© 2026 NexSense Labs · FreshSense Product Concept · RTU CpE</div>
+    <div class="footer-badge"><span>●</span> Group Activity No. 1</div>
+  </footer>
+
+  <script>
+    // ─── THEME TOGGLE ───
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      document.getElementById('themeIcon').textContent = isDark ? '🌙' : '☀️';
+      document.getElementById('themeLabel').textContent = isDark ? 'Dark' : 'Light';
+    }
+
+    // ─── SCROLL REVEAL ───
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => observer.observe(el));
+
+    // ─── COUNT UP ANIMATION ───
+    function animateCount(el) {
+      const target = parseInt(el.dataset.target);
+      let current = 0;
+      const step = target / 50;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { el.textContent = target + (target === 30 ? '%' : ''); clearInterval(timer); }
+        else { el.textContent = Math.floor(current) + (target === 30 ? '%' : ''); }
+      }, 30);
+    }
+    const statNums = document.querySelectorAll('.stat-num');
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { animateCount(e.target); statObserver.unobserve(e.target); } });
+    }, { threshold: 0.5 });
+    statNums.forEach(el => statObserver.observe(el));
+
+    // ─── NAV ACTIVE HIGHLIGHT ───
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+      navLinks.forEach(a => {
+        a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+      });
+    });
+  </script>
+</body>
+
+</html>
